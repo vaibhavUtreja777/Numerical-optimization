@@ -1,0 +1,528 @@
+
+Q1 WAP for finding optimal solution using Line Search method
+
+# Question 1
+import numpy as np
+
+from scipy.optimize import minimize_scalar
+
+def objective_function(x):
+    return (x**2 + 2*x + 1)
+
+print()
+
+min_result = minimize_scalar(objective_function, method='golden', bracket=(0, 1))
+max_result = minimize_scalar(objective_function, method='golden', bracket=(0, 1))
+
+optimal_max_solution = max_result.x
+optimal_min_solution = min_result.x
+
+print("Minimization Result - Optimal Solution:", optimal_min_solution)
+print("Maximization Result - Optimal Solution:", optimal_max_solution)
+
+Output:-
+Minimization Result - Optimal Solution: -1.0000000000000002
+Maximization Result - Optimal Solution: -1.0000000000000002
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Q2 WAP to solve a LPP graphically.
+
+#Ques 2
+import numpy as np
+from scipy.optimize import linprog
+import matplotlib.pyplot as plt
+# Define the coefficients of the objective function to maximize
+c = [-5, -3] # Coefficients of the function to maximize (e.g., Z = 5x + 3y)
+# Define the coefficients of inequality constraints in the form of Ax <= b
+A = np.array([[2, 1], # Coefficients of the first constraint
+[1, 3]]) # Coefficients of the second constraint
+b = [10, 12] # Right-hand side values of the constraints
+# Define the bounds for variables (x and y) - e.g., x >= 0, y >= 0
+x_bounds = (0, None) # x >= 0
+y_bounds = (0, None) # y >= 0
+# Solve the linear programming problem
+result = linprog(c, A_ub=A, b_ub=b, bounds=[x_bounds, y_bounds], method='highs')
+if result.success:
+    print("Optimal solution found:")
+    print("x =", result.x[0])
+    print("y =", result.x[1])
+    print("Optimal value (Z) =", -result.fun)
+    x = result.x[0]
+    y = result.x[1]
+else:
+    print("No optimal solution found.")
+# Create a meshgrid for plotting the feasible region
+x_range = np.linspace(0, 10, 400)
+y_range = np.linspace(0, 10, 400)
+X, Y = np.meshgrid(x_range, y_range)
+# Define the constraints in the form Ax <= b
+constraint1 = 2 * X + Y
+constraint2 = X + 3 * Y
+# Plot the feasible region
+plt.figure()
+plt.contour(X, Y, (constraint1 <= 10) , colors='red', levels=[0], linewidths=2)
+plt.contour(X, Y, (constraint2 <= 12), colors='blue', levels=[0], linewidths=2)
+plt.fill_between(x_range, 0, (12 - x_range) / 3, where=(12 - x_range) / 3 >= 0,
+color='black', alpha=0.5)
+plt.fill_between(y_range, 0, (10-2*x_range), where=(10 - 2 * y_range) >= 0,
+color='blue', alpha=0.5)
+# Plot the optimal solution point
+plt.plot(x, y, 'ro')
+plt.text(x, y, f'Optimal\n({x}, {y})', fontsize=12, ha='left')
+# Set axis labels and limits
+plt.xlabel('x')
+plt.ylabel('y')
+plt.xlim(0, 10)
+plt.ylim(0, 10)
+# Show the plot
+plt.show()
+Optimal solution found:
+x = 3.6000000000000014
+y = 2.8
+Optimal value (Z) = 26.400000000000006
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Q3 WAP to compute the gradient and Hessian of the function 𝑓(𝑥) = 100(𝑥2 − 𝑥1 2 ) 2 + (1 − 𝑥1) 2
+
+# Question 3
+import sympy as sp
+
+# Define symbolic variables
+x1, x2 = sp.symbols('x1 x2')
+
+# Define the function
+f = 100*(x2**2 -x1**2)**2 +(1-x1)**2
+
+# Calculate the gradient of the function
+gradient = [sp.diff(f, x1), sp.diff(f, x2)]
+
+# Calculate the Hessian of the function
+hessian = sp.hessian(f, (x1, x2))
+
+# Print the function
+print(f)
+
+# Print the gradient
+print(gradient)
+
+# Print the Hessian
+print("Hessian:")
+print(hessian)
+
+Output:-
+(1 - x1)**2 + 100*(-x1**2 + x2**2)**2
+[-400*x1*(-x1**2 + x2**2) + 2*x1 - 2, 400*x2*(-x1**2 + x2**2)]
+Hessian:
+Matrix([[1200*x1**2 - 400*x2**2 + 2, -800*x1*x2], [-800*x1*x2, -400*x1**2 + 1200*x2**2]])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Q4 WAP to find Global Optimal Solution of a function 𝑓(𝑥) = −10𝐶𝑜𝑠(𝜋𝑥 − 2.2) + (𝑥
+
+1.5)𝑥 algebraically
+# Import necessary libraries
+import numpy as np
+from scipy.optimize import minimize
+
+# Define the objective function
+def objective_function(x):
+    return -10 * np.cos(2.2 * np.pi * x) + (x + 1.5)**2
+
+# Specify the initial guess
+initial_guess = 0.0
+
+# Run the minimization using Nelder-Mead method
+minimization_result = minimize(objective_function, initial_guess, method='Nelder-Mead')
+
+# Extract the optimal solution and function value
+optimal_solution = minimization_result.x[0]
+optimal_value = minimization_result.fun
+
+# Print the results
+print("Optimal Solution:", optimal_solution)
+print("Optimal Value:", optimal_value)
+
+
+
+Output:-
+Optimal Solution: -0.006250000000000002
+Optimal Value: -7.759382527770949
+Q5 WAP to find Global Optimal Solution of a function 𝑓(𝑥) = −10𝐶𝑜𝑠(𝜋𝑥 − 2.2) + (𝑥
+
+1.5)𝑥 graphically
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Question 5
+import numpy as np
+import matplotlib.pyplot as plt
+
+def f(x):  # Define the function
+    return -10 * np.cos(np.pi * 2.2 * x) + (x + 1.5) ** 2
+
+# Generate x values
+x = np.linspace(-5, 5, 1000)
+
+# Calculate corresponding y values
+y = f(x)
+
+# Find the minimum and maximum values of y
+optimal_x = x[np.argmin(y)]
+optimal_y = min(y)
+
+# Plot the function
+plt.plot(x, y)
+
+# Scatter plot the minimum point
+plt.scatter(optimal_x, optimal_y, color="red", label=f"Minimum: x = {optimal_x:.2E}, y = {optimal_y:.2f}")
+
+# Label and configure the plot
+plt.xlabel("x")
+plt.ylabel("f(x)")
+plt.legend()
+plt.grid(True)
+plt.title("Graph of f(x)")
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Q6 WAP to solve constraint optimization problem.
+
+from scipy.optimize import minimize
+
+def objective_function(x):
+  return x[0]**2 + x[1]**2
+
+def constraint_function(x):
+  return x[0] + x[1] - 1
+
+initial_guess = [0.0, 0.0]
+
+constraints = [{'type': 'ineq', 'fun': constraint_function}]
+
+result = minimize(objective_function, initial_guess, constraints=constraints)
+
+print("Optimal solution:", result.x)
+print("Optimal value:", result.fun)
+
+
+Output:-
+Optimal solution: [0.5 0.5]
+Optimal value: 0.5000000000000002
+
+
+
+
+
+
+
+
+
+Q7 WAP to implement Newton Method
+
+#Ques 7
+def f(x):
+    return x**2 - 4*x+ 4
+
+def f_prime(x):
+    return 2*x-4
+
+def f_double_prime(x):
+    return 2
+
+x0 = 3
+tolerance = 1e-6
+max_iterations = 100
+
+for i in range(max_iterations):
+    x1 = x0 - f_prime(x0) / f_double_prime(x0)
+    if abs(x1 - x0) < tolerance:
+        break
+    x0 = x1
+
+print()
+print(f"Minimum Value: {f(x0)}")
+print(f"Location: ({x0})")
+
+
+Output:-
+Minimum Value: 0.0
+Location: (2.0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Q8 WAP to implement gradient descent method
+
+# Question 8
+
+import sympy as sp
+
+def gradient_descent(initial_x, learning_rate, num_iterations):
+
+  # Define the symbolic variable.
+  x = sp.symbols("x")
+
+  # Define the cost function (symbolic expression).
+  f = x**2 + 5*x + 6
+
+  # Define the derivative of the cost function (symbolic expression).
+  df = sp.diff(f, x)
+
+  # Convert the symbolic derivative to a numerical function using lambdify.
+  f_prime = sp.lambdify(x, df, modules=["numpy"])
+
+  # Initialize variables to track minimum value and x-value.
+  min_value = None
+  min_x = None
+
+  # Iterate for the specified number of times.
+  for _ in range(num_iterations):
+    # Calculate the gradient (i.e., the derivative) at the current x-value.
+    gradient = f_prime(initial_x)
+
+    # Update the x-value using the gradient and learning rate.
+    initial_x -= learning_rate * gradient
+
+    # Update the minimum value and x-value if necessary.
+    if min_value is None or f.subs(x, initial_x) < min_value:
+      min_value = f.subs(x, initial_x)
+      min_x = initial_x
+
+  # Return the minimum value and x-value.
+  return min_x, min_value
+
+# Set initial values for x, learning rate, and number of iterations.
+initial_x = 0
+learning_rate = 0.1
+num_iterations = 1000
+
+# Find the minimum value and x-value using gradient descent.
+min_x, min_value = gradient_descent(initial_x, learning_rate, num_iterations)
+
+# Print the results.
+print(f"Minimum value is {min_value} at x = {min_x}")
+
+
+Output:-
+Minimum value is -0.250000000000000 at x = -2.4999999773843578
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Q9 WAP to implement steepest descent method
+
+import numpy as np
+
+def objective_function(x):
+
+  return x**2 + 4*x
+
+def gradient(x):
+
+  return 2*x + 4
+
+def steepest_descent(initial_guess, learning_rate, tolerance):
+ 
+
+  x = initial_guess
+  while True:
+    # Calculate the gradient at the current x-value.
+    grad_value = gradient(x)
+
+    # Check if the convergence criterion is met.
+    if np.linalg.norm(grad_value) < tolerance:
+      break
+
+    # Update x using the negative gradient and the learning rate.
+    x = x - learning_rate * grad_value
+
+  # Return the minimum value and the corresponding x-value.
+  return x, objective_function(x)
+
+# Set the initial guess, learning rate, and tolerance.
+initial_guess = np.array([0.0])
+learning_rate = 0.1
+tolerance = 1e-6
+
+# Run the steepest descent algorithm and print the results.
+result = steepest_descent(initial_guess, learning_rate, tolerance)
+
+
+print("Optimal solution: x =", result[0])
+
+
+
+Output:-
+Optimal solution: x = [-1.99999959]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Q10 WAP to implement Taylor polynomial
+
+import math
+
+def factorial (n):                      
+    if n == 0:
+        return 1
+    else:
+        return n * factorial (n - 1)
+
+def taylor_coefficient (func, point, degree, derivative_order):
+    return func(point) / factorial(derivative_order)
+
+def taylor_polynomial (func, degree, point, var='x'):
+    x = point
+    taylor_poly = sum(taylor_coefficient (func, point, i, i) * (x - point) **i for i in range (degree + 1))
+    return taylor_poly
+
+def sin_function(x):                    
+    return math.cos(x)
+
+degree_of_polynomial = 3
+center_point = 0
+
+taylor_poly = taylor_polynomial (sin_function, degree_of_polynomial, center_point)
+
+print("Taylor Polynomial:", taylor_poly)
+
+
+Output:-
+Taylor Polynomial: 1.0
